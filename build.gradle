@@ -1,0 +1,80 @@
+//buildscript代码块中脚本优先执行
+buildscript {
+
+	//ext用于定义动态属性
+	ext {
+		springBootVersion = '2.2.3RELEASE'
+	}
+
+	//自定义Thymeleaf和Thymeleaf Layout Dialect的版本
+	ext['thymeleaf.version'] = '3.0.11.RELEASE'
+	ext['thymeleaf-layout-dialect.version'] = '2.2.0'
+
+	//自定义Hibernate的版本
+	ext['hibernate.version'] = '5.4.10.Final'
+
+	//使用了Maven的中央仓库
+	repositories {
+		mavenCentral()
+//        maven {
+//            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+//        }
+	}
+
+	//依赖关系
+	dependencies {
+		//classpath声明说明了在执行其余的脚本是，ClassLoader可以使用这些依赖项
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+plugins {
+	id 'org.springframework.boot' version '2.2.4.RELEASE'
+	id 'io.spring.dependency-management' version '1.0.8.RELEASE'
+	id 'java'
+}
+version = '1.0.0'
+sourceCompatibility = '1.8'
+group = 'xyz.zxcwxy999.spring.boot.blog'
+//使用插件
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+
+//指定了生成的打包文件的文件名称
+version = '1.0.0'
+
+//指定编译.java文件的JDK版本
+sourceCompatibility = '1.8'
+
+//默认使用了Maven的中央仓库，改用自定义的镜像库
+repositories {
+	mavenCentral()
+//	maven{
+//		url 'http://maven.aliyun.com/nexus/content/groups/public/'
+//	}
+}
+
+//依赖关系
+dependencies {
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.2.4.RELEASE'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-thymeleaf
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf', version: '2.2.4.RELEASE'
+
+	// https://mvnrepository.com/artifact/com.h2database/h2
+	testCompile group: 'com.h2database', name: 'h2', version: '1.4.200'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.2.4.RELEASE'
+
+	// https://mvnrepository.com/artifact/mysql/mysql-connector-java
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.18'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-test
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: '2.2.4.RELEASE'
+
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-devtools
+	compile group: 'org.springframework.boot', name: 'spring-boot-devtools', version: '2.2.4.RELEASE'
+
+}
