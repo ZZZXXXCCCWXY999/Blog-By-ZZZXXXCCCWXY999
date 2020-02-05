@@ -1,14 +1,22 @@
 package xyz.zxcwxy999.blog.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import xyz.zxcwxy999.blog.Service.UserService;
+import xyz.zxcwxy999.blog.domain.User;
 
 /**
  * 主页控制器
  */
 @Controller
 public class MainController {
+
+    @Autowired
+    private UserService userService;
+
     @GetMapping("/")
     public String root() {
         return "redirect:/index";
@@ -34,5 +42,11 @@ public class MainController {
     @GetMapping("/register")
     public String register(){
         return "register";
+    }
+
+    @PostMapping("/register")
+    public String registerUser(User user){
+        userService.registerUser(user);
+        return "redirect:/login";
     }
 }
