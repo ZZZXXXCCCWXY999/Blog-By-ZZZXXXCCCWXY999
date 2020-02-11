@@ -1,5 +1,8 @@
 package xyz.zxcwxy999.blog.vo;
 
+/**
+ * 响应类
+ */
 public class Response {
 
     private boolean success;//处理是否成功

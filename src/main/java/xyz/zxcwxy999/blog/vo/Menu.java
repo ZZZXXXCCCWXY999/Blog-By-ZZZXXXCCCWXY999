@@ -1,5 +1,8 @@
 package xyz.zxcwxy999.blog.vo;
 
+/**
+ * 菜单类
+ */
 public class Menu {
     private String name;//菜单名称
     private String url;//菜单URL

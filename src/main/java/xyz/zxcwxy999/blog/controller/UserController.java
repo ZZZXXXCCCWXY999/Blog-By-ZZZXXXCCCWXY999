@@ -10,18 +10,25 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import xyz.zxcwxy999.blog.Service.AuthorityService;
 import xyz.zxcwxy999.blog.Service.UserService;
+import xyz.zxcwxy999.blog.domain.Authority;
 import xyz.zxcwxy999.blog.domain.User;
 import xyz.zxcwxy999.blog.util.ConstraintViolationExceptionHandler;
 import xyz.zxcwxy999.blog.vo.Response;
 
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
 
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    @Autowired
+    private AuthorityService authorityService;
 
     @Autowired
     private UserService userService;
@@ -66,7 +73,11 @@ public class UserController {
      * @return
      */
     @PostMapping
-    public ResponseEntity<Response> saveOrUpdateUser(User user){
+    public ResponseEntity<Response> saveOrUpdateUser(User user,Long authorityId){
+        List<Authority>authorities=new ArrayList<>();
+        authorities.add(authorityService.getAuthorityById(authorityId).get());
+        user.setAuthorities(authorities);
+
         try{
             userService.saveOrUpdateUser(user);
         }catch (ConstraintViolationException e){

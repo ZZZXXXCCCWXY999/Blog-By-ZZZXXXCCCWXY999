@@ -1,7 +1,5 @@
 package xyz.zxcwxy999.blog.util;
 
-
-
 import org.apache.commons.lang3.StringUtils;
 
 import javax.validation.ConstraintViolation;
@@ -11,6 +9,7 @@ import java.util.List;
 
 /**
  * ConstraintViolationException处理器
+ * 用于处理ConstraintViolationException异常
  */
 public class ConstraintViolationExceptionHandler {
     public static String getMessage(ConstraintViolationException e){
