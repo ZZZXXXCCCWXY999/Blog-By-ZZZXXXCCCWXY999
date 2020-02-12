@@ -1,11 +1,17 @@
 package xyz.zxcwxy999.blog.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UserDetailsByNameServiceWrapper;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
+import xyz.zxcwxy999.blog.Service.UserService;
+import xyz.zxcwxy999.blog.domain.User;
 
 /**
  * 用户主页控制器
@@ -13,6 +19,17 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/u")
 public class UserspaceController {
+
+    @Autowired
+    private UserService userService;
+
+    @Qualifier("UserService")
+    @Autowired
+    private UserDetailsService userDetailsService;
+
+    @Value("${file.server.url}")
+    private String fileServerUrl;
+
     /**
      * 用户空间主页
      * @param username 用户名称（既是路径，又是参数）
@@ -71,4 +88,24 @@ public class UserspaceController {
     public String editBlog(){
         return "/userspace/blogedit";
     }
+
+    /**
+     * 获取个人设置页面
+     * @param username
+     * @param model
+     * @return
+     */
+    @GetMapping("/{username}/profile")
+    @PreAuthorize("authentication.name.equals(#username)")
+    public ModelAndView profile(@PathVariable("username") String username,Model model){
+        User user=(User)userDetailsService.loadUserByUsername(username);
+        model.addAttribute("user",user);
+        model.addAttribute("fileServerUrl",fileServerUrl);//文件服务器地址返回给客户端
+        return new ModelAndView("/userspace/profile","userModel",model);
+    }
+
+
+    @PostMapping("/{username}/profile")
+    @PreAuthorize("authentication.name.equals(#username)")
+
 }

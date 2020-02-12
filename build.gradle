@@ -85,8 +85,13 @@ dependencies {
 	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.9'
 
 	// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity4
-	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity4', version: '3.0.4.RELEASE'
+	compile group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity5', version: '3.0.4.RELEASE'
 
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '2.2.4.RELEASE'
+
+	// https://mvnrepository.com/artifact/es.nitaur.markdown/txtmark
+	compile group: 'es.nitaur.markdown', name: 'txtmark', version: '0.16'
+
+
 }
