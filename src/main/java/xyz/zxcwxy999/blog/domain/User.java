@@ -3,6 +3,8 @@ package xyz.zxcwxy999.blog.domain;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.*;
 import javax.validation.constraints.Email;
@@ -118,6 +120,13 @@ public class User implements UserDetails {
         this.authorities = authorities;
     }
 
+
+    public void setEncodePassword(String password) {
+        PasswordEncoder encoder = new BCryptPasswordEncoder();
+        String encodePasswd = encoder.encode(password);
+        this.password = encodePasswd;
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         //首先需将List<Authority>转成List<SimpleGrantedAuthority>，否则前端拿不到角色列表名称
@@ -159,4 +168,6 @@ public class User implements UserDetails {
                 ", authorities=" + authorities +
                 '}';
     }
+
+
 }

@@ -52,7 +52,7 @@ $(function() {
  	    formData.append("file",convertBase64UrlToBlob(base64Codes));  //append函数的第一个参数是后台获取数据的参数名,和html标签的input的name属性功能相同  
 	    
  	    $.ajax({
-		    url: 'http://47.104.219.154:8081/upload',
+		    url: fileServerUrl,
 		    type: 'POST',
 		    cache: false,
 		    data: formData,
@@ -60,7 +60,12 @@ $(function() {
 		    contentType: false,
 		    success: function(data){
 		    	
-		    	var avatarUrl = data;				
+		    	var avatarUrl = data;
+
+		    	//获取CSRF Token
+				var csrfToken=$("meta[name='_csrf']").attr("content");
+				var csrfHeader=$("meta[name='_csrf_header']").attr("content");
+
 		    	// 保存头像更改到数据库
 				$.ajax({ 
 					 url: avatarApi, 
