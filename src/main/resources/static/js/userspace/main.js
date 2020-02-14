@@ -72,7 +72,9 @@ $(function() {
 					 type: 'POST',
 					 contentType: "application/json; charset=utf-8",
 					 data: JSON.stringify({"id":Number($("#userId").val()), "avatar":avatarUrl}),
-				
+					beforeSend:function(request){
+					 	request.setRequestHeader(csrfHeader,csrfToken);//添加 CSRF Token
+					},
 					 success: function(data){
 						 if (data.success) {
 							// 成功后，置换头像图片
