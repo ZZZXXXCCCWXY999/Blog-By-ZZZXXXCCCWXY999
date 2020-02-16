@@ -170,10 +170,7 @@ $(function() {
 		catalogId = $(this).attr('catalogId');
 		getBlogsByName(0, _pageSize);
 	});
-	
-	
-	
-	
+
 	getCatalogs(username);
  
 });
