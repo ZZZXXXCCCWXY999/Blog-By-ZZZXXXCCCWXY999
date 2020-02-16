@@ -14,7 +14,7 @@ public interface BlogService {
      * @param blog
      * @return
      */
-    Blog SaveBlog(Blog blog);
+    Blog saveBlog(Blog blog);
 
     /**
      * 删除Blog
