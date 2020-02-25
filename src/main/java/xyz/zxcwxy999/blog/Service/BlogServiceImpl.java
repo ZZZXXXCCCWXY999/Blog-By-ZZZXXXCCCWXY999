@@ -3,8 +3,10 @@ package xyz.zxcwxy999.blog.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import xyz.zxcwxy999.blog.domain.Blog;
+import xyz.zxcwxy999.blog.domain.Comment;
 import xyz.zxcwxy999.blog.domain.User;
 import xyz.zxcwxy999.blog.repository.BlogRepository;
 
@@ -19,10 +21,14 @@ public class BlogServiceImpl implements BlogService{
 
     @Transactional
     @Override
-    public Blog SaveBlog(Blog blog) {
+    public Blog saveBlog(Blog blog) {
         Blog returnBlog=blogRepository.save(blog);
         return returnBlog;
     }
+
+    @Transactional
+
+
 
     @Override
     public void removeBlog(Long id) {
@@ -59,7 +65,30 @@ public class BlogServiceImpl implements BlogService{
         if(blog.isPresent()){
             blogNew=blog.get();
             blogNew.setReadSize(blogNew.getReadSize()+1);//在原有基础上递增1
-            this.SaveBlog(blogNew);
+            this.saveBlog(blogNew);
+        }
+    }
+
+    @Override
+    public Blog createComment(Long blogId, String commentContent) {
+        Optional<Blog> optionalBlog=blogRepository.findById(blogId);
+        Blog originalBlog=null;
+        if(optionalBlog.isPresent()){
+            originalBlog=optionalBlog.get();
+            User user=(User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            Comment comment=new Comment(user,commentContent);
+            originalBlog.addComment(comment);
+        }
+        return this.saveBlog(originalBlog);
+    }
+
+    @Override
+    public void removeComment(Long blogid, Long commentId) {
+        Optional<Blog> optionalBlog=blogRepository.findById(blogid);
+        if(optionalBlog.isPresent()){
+            Blog originalBlog=optionalBlog.get();
+            originalBlog.removeComment(blogid);
+            this.saveBlog(originalBlog);
         }
     }
 }
