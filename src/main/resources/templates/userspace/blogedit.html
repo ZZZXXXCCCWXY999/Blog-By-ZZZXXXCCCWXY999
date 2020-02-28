@@ -87,13 +87,11 @@
                     <div class="row mt-1">
                         <div class="col-lg-12">
                             <button class="btn btn-primary float-right" id="submitBlog"
-                                    th:attr="userName=${#authentication.name}">发布
+                                    th:attr="userName=${#authentication.principal.username}">发布
                             </button>
                         </div>
                     </div>
-
                 </div>
-
             </div>
         </div>
 

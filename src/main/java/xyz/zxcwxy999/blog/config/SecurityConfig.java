@@ -55,7 +55,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and().exceptionHandling().accessDeniedPage("/403");//处理异常，拒绝访问就重定向到403页面
         http.csrf().ignoringAntMatchers("/h2-console/**");//禁用H2控制台的CSRF防护
         http.headers().frameOptions().sameOrigin();//允许来自同一来源的H2控制台的请求
-    }
+}
 
     /**
      * 认证信息管理

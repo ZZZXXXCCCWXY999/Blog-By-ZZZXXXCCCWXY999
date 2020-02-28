@@ -15,7 +15,6 @@ import xyz.zxcwxy999.blog.domain.User;
 import xyz.zxcwxy999.blog.util.ConstraintViolationExceptionHandler;
 import xyz.zxcwxy999.blog.vo.Response;
 
-import javax.jws.soap.SOAPBinding;
 import javax.validation.ConstraintViolationException;
 import java.util.List;
 import java.util.Optional;
@@ -57,7 +56,6 @@ public class CommentController {
         model.addAttribute("commentOwener", commentOwner);
         model.addAttribute("comments", comments);
         return "userspace/blog::#mainContainerReplace";
-
     }
 
     /**

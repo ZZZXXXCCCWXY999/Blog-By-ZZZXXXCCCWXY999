@@ -16,9 +16,9 @@ buildscript {
 	//使用了Maven的中央仓库
 	repositories {
 		mavenCentral()
-//        maven {
-//            url 'http://maven.aliyun.com/nexus/content/groups/public/'
-//        }
+        maven {
+            url 'http://maven.aliyun.com/nexus/content/groups/public/'
+        }
 	}
 
 	//依赖关系

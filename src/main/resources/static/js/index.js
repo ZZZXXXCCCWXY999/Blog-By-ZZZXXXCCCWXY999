@@ -2,7 +2,7 @@
  * index main JS.
  * 
  * @since: 1.0.0 2017/4/12
- * @author Way Lau <https://waylau.com>
+ * @author
  */
 "use strict";
 // # sourceURL=index.js

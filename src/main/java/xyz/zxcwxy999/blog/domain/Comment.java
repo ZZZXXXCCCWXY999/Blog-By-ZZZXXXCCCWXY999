@@ -6,6 +6,7 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Timestamp;
 
+@Entity
 public class Comment implements Serializable {
     private static final long serialVersionUID = 1L;
 

@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,8 @@ import xyz.zxcwxy999.blog.util.ConstraintViolationExceptionHandler;
 import xyz.zxcwxy999.blog.vo.Response;
 
 import javax.validation.ConstraintViolationException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -74,36 +77,36 @@ public class UserspaceController {
      * @param model
      * @return
      */
-//    @GetMapping("/{username}/blogs")
-//    public String listBlogsByOrder(@PathVariable("username") String username,
-//                                   @RequestParam(value = "order", required = false, defaultValue = "new") String order,
-//                                   @RequestParam(value = "catalog", required = false) Long catalogId,
-//                                   @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
-//                                   @RequestParam(value = "async", required = false) boolean async,
-//                                   @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
-//                                   @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize, Model model) {
-//
-//        User user = (User) userDetailsService.loadUserByUsername(username);
-//        Page<Blog> page = null;
-//        if (catalogId != null && catalogId > 0) {//分类查询
-//
-//        } else if (order.equals("hot")) {//最热查询
-//            Sort sort = new Sort(Sort.Direction.DESC, "readSize", "commentSize", "voteSize");
-//            Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
-//            page = blogService.listBlogByTitleVote(user, keyword, pageable);
-//        } else if (order.equals("new")) {
-//            Pageable pageable = PageRequest.of(pageIndex, pageSize);
-//            page = blogService.listBlogByTitleVote(user, keyword, pageable);
-//        }
-//        List<Blog> list = page.getContent();//当前所在页面数据列表
-//        model.addAttribute("user", user);
-//        model.addAttribute("order", order);
-//        model.addAttribute("catalogId", catalogId);
-//        model.addAttribute("keyword", keyword);
-//        model.addAttribute("page", page);
-//        model.addAttribute("blogList", list);
-//        return (async == true ? "/userspace/u :: #mainContainerRepleace" : "/userspace/u");
-//    }
+    @GetMapping("/{username}/blogs")
+    public String listBlogsByOrder(@PathVariable("username") String username,
+                                   @RequestParam(value = "order", required = false, defaultValue = "new") String order,
+                                   @RequestParam(value = "catalog", required = false) Long catalogId,
+                                   @RequestParam(value = "keyword", required = false, defaultValue = "") String keyword,
+                                   @RequestParam(value = "async", required = false) boolean async,
+                                   @RequestParam(value = "pageIndex", required = false, defaultValue = "0") int pageIndex,
+                                   @RequestParam(value = "pageSize", required = false, defaultValue = "10") int pageSize, Model model) {
+
+        User user = (User) userDetailsService.loadUserByUsername(username);
+        Page<Blog> page = null;
+        if (catalogId != null && catalogId > 0) {//分类查询
+
+        } else if (order.equals("hot")) {//最热查询
+            Sort sort=Sort.by(Direction.DESC,"readSize","commentSize","voteSize");
+            Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
+            page = blogService.listBlogByTitleVote(user, keyword, pageable);
+        } else if (order.equals("new")) {
+            Pageable pageable = PageRequest.of(pageIndex, pageSize);
+            page = blogService.listBlogByTitleVote(user, keyword, pageable);
+        }
+        List<Blog> list = page.getContent();//当前所在页面数据列表
+        model.addAttribute("user", user);
+        model.addAttribute("order", order);
+        model.addAttribute("catalogId", catalogId);
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("page", page);
+        model.addAttribute("blogList", list);
+        return (async == true ? "/userspace/u :: #mainContainerRepleace" : "/userspace/u");
+    }
 
     /**
      * 显示用户某篇博客
@@ -151,7 +154,7 @@ public class UserspaceController {
     }
 
     /**
-     * 获取新增博客的页面
+     * 获取编辑博客的页面
      * @param username
      * @param id
      * @param model

@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div>
-                    <a href="/u/waylau/blogs/edit" th:href="@{'/u/'+${#authentication.principal.username}+'/blogs/edit'}"
+                    <a href="/u/admin/blogs/edit" th:href="@{'/u/'+${#authentication.principal.username}+'/blogs/edit'}"
                        class="btn btn-outline-success my-2 my-sm-0">写博客</a>
                 </div>
                 <form action="/logout" th:action="@{/logout}" method="post">

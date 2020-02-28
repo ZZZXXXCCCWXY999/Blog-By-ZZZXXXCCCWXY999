@@ -7,6 +7,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
@@ -77,7 +79,10 @@ public class UserController {
         List<Authority>authorities=new ArrayList<>();
         authorities.add(authorityService.getAuthorityById(authorityId).get());
         user.setAuthorities(authorities);
-
+        //对密码进行加密处理
+        PasswordEncoder encoder=new BCryptPasswordEncoder();
+        String encodePasswd=encoder.encode(user.getPassword());
+        user.setPassword(encodePasswd);
         try{
             userService.saveOrUpdateUser(user);
         }catch (ConstraintViolationException e){
