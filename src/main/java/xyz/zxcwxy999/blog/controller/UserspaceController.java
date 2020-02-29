@@ -162,13 +162,14 @@ public class UserspaceController {
      */
     @GetMapping("/{username}/blogs/edit/{id}")
     public ModelAndView editBlog(@PathVariable("username")String username,@PathVariable("id")Long id,Model model){
+        System.out.println("GETMAPPING");
         model.addAttribute("blog",blogService.getBlogById(id).get());
         model.addAttribute("fileServerUrl",fileServerUrl);
         //文件服务器的地址返回给客户端
         return new ModelAndView("/userspace/blogedit","blogModel",model);
     }
 
-    /***
+    /**
      * 保存博客
      * @param username
      * @param blog
@@ -177,6 +178,7 @@ public class UserspaceController {
     @PostMapping("/{username}/blogs/edit")
     @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> saveBlog(@PathVariable("username")String username,@RequestBody Blog blog){
+        System.out.println("POSTMAPPING");
         try{
             //判断是修改还是新增
             if(blog.getId()!=null){
