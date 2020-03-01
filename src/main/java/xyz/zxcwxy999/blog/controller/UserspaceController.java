@@ -117,6 +117,7 @@ public class UserspaceController {
      */
     @GetMapping("/{username}/blogs/{id}")
     public String listBlogByOrder(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
+        System.out.println("userspace/blog"+username+"   "+id+" "+model);
         User princepal = null;
         Optional<Blog> blog = blogService.getBlogById(id);
 
