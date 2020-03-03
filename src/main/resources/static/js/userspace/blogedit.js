@@ -13,10 +13,27 @@ $(function() {
 	// 初始化下拉
 	$('.form-control-chosen').chosen();
 
-	//初始化标签
-	$('.form-control-tag').tagsInput({
-		'defaultText' : '输入标签'
+	$('#uploadImage').click(function(){
+		$.ajax({
+			url:'http://localhost:8081/upload',
+			type:'POST',
+			data:new FormData($('#uploadformid')[0]),
+			processData:false,
+			contentType:false,
+			success:function(data){
+				var mdcontent=$("#md").val();
+				$("#md").val(mdcontent+"\n![]("+data +") \n");
+			}
+		}).done(function(res){
+			$("#file").val("");
+		}).fail(function(res){});
+
 	});
+
+	//初始化标签
+	// $('.form-control-tag').tagsInput({
+	// 	'defaultText' : '输入标签'
+	// });
 
 	// 发布博客
 	$("#submitBlog").click(function() {

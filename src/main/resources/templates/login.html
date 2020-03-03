@@ -1,11 +1,19 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:th="http://www.thymeleaf.org">
+	xmlns:th="http://www.thymeleaf.org"
+	  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4">
 <head th:replace="~{fragments/header :: header}">
 </head>
     <body>
-
-    <div class="container blog-content-container">
+	<div sec:authorize="isAuthenticated()">
+		<p>已有用户登录</p>
+		<p>登录的用户为：<span sec:authentication="name"></span></p>
+		<p>用户角色为：<span sec:authentication="principal.authorities"></span></p>
+		<form action="/logout" th:action="@{/logout}" method="post">
+			<input class="btn btn-outline-success" type="submit" value="退出">
+		</form>
+	</div>
+    <div class="container blog-content-container" sec:authorize="isAnonymous()">
  
 		<form  th:action="@{~/login}" method="post">
 			<h2 >请登录</h2>
