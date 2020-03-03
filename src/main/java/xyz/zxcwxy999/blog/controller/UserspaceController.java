@@ -116,13 +116,11 @@ public class UserspaceController {
      * @return
      */
     @GetMapping("/{username}/blogs/{id}")
-    public String listBlogByOrder(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
+    public String getBlogById(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
         User princepal = null;
         Optional<Blog> blog = blogService.getBlogById(id);
-
         //每次读取，简单地可以认为阅读量增加1次
         blogService.readingIncrease(id);
-
         //判断操作用户是否为博客的所有者
         boolean isBlogOwner = false;
         if (SecurityContextHolder.getContext().getAuthentication() != null &&
@@ -182,6 +180,7 @@ public class UserspaceController {
         try{
             //判断是修改还是新增
             if(blog.getId()!=null){
+                System.out.println("修改修改修改修改修改修改");
                 Optional<Blog>optionalBlog=blogService.getBlogById(blog.getId());
                 if (optionalBlog.isPresent()){
                     Blog orignalBlog=optionalBlog.get();
@@ -191,6 +190,7 @@ public class UserspaceController {
                     blogService.saveBlog(orignalBlog);
                 }
             }else{
+                System.out.println("新增新增新增新增新增新增");
                 User user=(User)userDetailsService.loadUserByUsername(username);
                 blog.setUser(user);
                 blogService.saveBlog(blog);

@@ -13,14 +13,13 @@ $(function() {
 	// 初始化下拉
 	$('.form-control-chosen').chosen();
 
-	// 初始化标签
-	// $('.form-control-tag').tagsInput({
-	// 	'defaultText' : '输入标签'
-	// });
+	//初始化标签
+	$('.form-control-tag').tagsInput({
+		'defaultText' : '输入标签'
+	});
 
 	// 发布博客
 	$("#submitBlog").click(function() {
-
 		//获取CSRF Token
 		var csrfToken=$("meta[name='_csrf']").attr("content");
 		var csrfHeader=$("meta[name='_csrf_header']").attr("content");
