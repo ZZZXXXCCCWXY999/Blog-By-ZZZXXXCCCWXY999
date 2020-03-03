@@ -22,6 +22,7 @@ import xyz.zxcwxy999.blog.Service.BlogService;
 import xyz.zxcwxy999.blog.Service.UserService;
 import xyz.zxcwxy999.blog.domain.Blog;
 import xyz.zxcwxy999.blog.domain.User;
+import xyz.zxcwxy999.blog.domain.Vote;
 import xyz.zxcwxy999.blog.util.ConstraintViolationExceptionHandler;
 import xyz.zxcwxy999.blog.vo.Response;
 
@@ -67,6 +68,7 @@ public class UserspaceController {
 
     /**
      * 获取用户的博客列表
+     *
      * @param username
      * @param order
      * @param catalogId
@@ -91,7 +93,7 @@ public class UserspaceController {
         if (catalogId != null && catalogId > 0) {//分类查询
 
         } else if (order.equals("hot")) {//最热查询
-            Sort sort=Sort.by(Direction.DESC,"readSize","commentSize","voteSize");
+            Sort sort = Sort.by(Direction.DESC, "readSize", "commentSize", "voteSize");
             Pageable pageable = PageRequest.of(pageIndex, pageSize, sort);
             page = blogService.listBlogByTitleVote(user, keyword, pageable);
         } else if (order.equals("new")) {
@@ -110,15 +112,15 @@ public class UserspaceController {
 
     /**
      * 显示用户某篇博客
+     *
      * @param username
      * @param id
      * @param model
      * @return
      */
     @GetMapping("/{username}/blogs/{id}")
-    public String listBlogByOrder(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
-        System.out.println("userspace/blog"+username+"   "+id+" "+model);
-        User princepal = null;
+    public String getBlogById(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
+        User principal = null;
         Optional<Blog> blog = blogService.getBlogById(id);
 
         //每次读取，简单地可以认为阅读量增加1次
@@ -129,99 +131,116 @@ public class UserspaceController {
         if (SecurityContextHolder.getContext().getAuthentication() != null &&
                 SecurityContextHolder.getContext().getAuthentication().isAuthenticated() &&
                 !SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString().equals("anonymousUser")) {
-            princepal=(User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-            if(princepal!=null&&username.equals(princepal.getUsername())){
-                isBlogOwner=true;
+            principal = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal != null && username.equals(principal.getUsername())) {
+                isBlogOwner = true;
             }
         }
-        model.addAttribute("isBlogOwner",isBlogOwner);
-        model.addAttribute("blogModel",blog.get());
+        //判断操作用户的点赞情况
+        List<Vote> votes = blog.get().getVotes();
+        Vote currentVote = null;//当前用户的点赞情况
+        if (principal != null) {
+            for (Vote vote : votes) {
+                if (vote.getUser().getUsername().equals(principal.getUsername())) {
+                    currentVote = vote;
+                    break;
+                }
+
+            }
+        }
+        model.addAttribute("currentVote",currentVote);
+        model.addAttribute("isBlogOwner", isBlogOwner);
+        model.addAttribute("blogModel", blog.get());
 
         return "/userspace/blog";
     }
 
     /**
      * 获取新增博客的页面
+     *
      * @param username
      * @param model
      * @return
      */
     @GetMapping("/{username}/blogs/edit")
-    public ModelAndView createBlog(@PathVariable("username")String username,Model model) {
-        model.addAttribute("blog",new Blog(null,null,null));
-        model.addAttribute("fileServerUrl",fileServerUrl);
+    public ModelAndView createBlog(@PathVariable("username") String username, Model model) {
+        model.addAttribute("blog", new Blog(null, null, null));
+        model.addAttribute("fileServerUrl", fileServerUrl);
         //文件服务器的地址传给客户端
-        return new ModelAndView("/userspace/blogedit","blogModel",model);
+        return new ModelAndView("/userspace/blogedit", "blogModel", model);
     }
 
     /**
      * 获取编辑博客的页面
+     *
      * @param username
      * @param id
      * @param model
      * @return
      */
     @GetMapping("/{username}/blogs/edit/{id}")
-    public ModelAndView editBlog(@PathVariable("username")String username,@PathVariable("id")Long id,Model model){
+    public ModelAndView editBlog(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
         System.out.println("GETMAPPING");
-        model.addAttribute("blog",blogService.getBlogById(id).get());
-        model.addAttribute("fileServerUrl",fileServerUrl);
+        model.addAttribute("blog", blogService.getBlogById(id).get());
+        model.addAttribute("fileServerUrl", fileServerUrl);
         //文件服务器的地址返回给客户端
-        return new ModelAndView("/userspace/blogedit","blogModel",model);
+        return new ModelAndView("/userspace/blogedit", "blogModel", model);
     }
 
     /**
      * 保存博客
+     *
      * @param username
      * @param blog
      * @return
      */
     @PostMapping("/{username}/blogs/edit")
     @PreAuthorize("authentication.name.equals(#username)")
-    public ResponseEntity<Response> saveBlog(@PathVariable("username")String username,@RequestBody Blog blog){
+    public ResponseEntity<Response> saveBlog(@PathVariable("username") String username, @RequestBody Blog blog) {
         System.out.println("POSTMAPPING");
-        try{
+        try {
             //判断是修改还是新增
-            if(blog.getId()!=null){
-                Optional<Blog>optionalBlog=blogService.getBlogById(blog.getId());
-                if (optionalBlog.isPresent()){
-                    Blog orignalBlog=optionalBlog.get();
+            if (blog.getId() != null) {
+                Optional<Blog> optionalBlog = blogService.getBlogById(blog.getId());
+                if (optionalBlog.isPresent()) {
+                    Blog orignalBlog = optionalBlog.get();
                     orignalBlog.setTitle(blog.getTitle());
                     orignalBlog.setContent(blog.getContent());
                     orignalBlog.setSummary(blog.getSummary());
                     blogService.saveBlog(orignalBlog);
                 }
-            }else{
-                User user=(User)userDetailsService.loadUserByUsername(username);
+            } else {
+                User user = (User) userDetailsService.loadUserByUsername(username);
                 blog.setUser(user);
                 blogService.saveBlog(blog);
             }
-        }catch (ConstraintViolationException e){
+        } catch (ConstraintViolationException e) {
             return ResponseEntity.ok().body(new Response(false, ConstraintViolationExceptionHandler.getMessage(e)));
-        }catch(Exception e){
-            return ResponseEntity.ok().body(new Response(false,e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }
-        String redirectUrl="/u/"+username+"/blogs/"+blog.getId();
-        return  ResponseEntity.ok().body(new Response(true,"处理成功",redirectUrl));
+        String redirectUrl = "/u/" + username + "/blogs/" + blog.getId();
+        return ResponseEntity.ok().body(new Response(true, "处理成功", redirectUrl));
     }
 
     /**
      * 删除博客
+     *
      * @param username
      * @param id
      * @return
      */
     @DeleteMapping("/{username}/blogs/{id}")
     @PreAuthorize("authentication.name.equals(#username)")
-    public ResponseEntity<Response>deleteBlog(@PathVariable("username")String username,@PathVariable("id")Long id){
-        try{
+    public ResponseEntity<Response> deleteBlog(@PathVariable("username") String username, @PathVariable("id") Long id) {
+        try {
             blogService.removeBlog(id);
-        }catch (Exception e){
-            return ResponseEntity.ok().body(new Response(false,e.getMessage()));
+        } catch (Exception e) {
+            return ResponseEntity.ok().body(new Response(false, e.getMessage()));
         }
 
-        String redirectUrl="/u/"+username+"/blogs";
-        return ResponseEntity.ok().body(new Response(true,"处理成功",redirectUrl));
+        String redirectUrl = "/u/" + username + "/blogs";
+        return ResponseEntity.ok().body(new Response(true, "处理成功", redirectUrl));
     }
 
 
