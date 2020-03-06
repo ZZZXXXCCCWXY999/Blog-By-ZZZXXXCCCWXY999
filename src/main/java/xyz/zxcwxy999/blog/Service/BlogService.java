@@ -3,6 +3,7 @@ package xyz.zxcwxy999.blog.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import xyz.zxcwxy999.blog.domain.Blog;
+import xyz.zxcwxy999.blog.domain.Catalog;
 import xyz.zxcwxy999.blog.domain.User;
 
 import java.util.Optional;
@@ -67,4 +68,12 @@ public interface BlogService {
      * @param commentId
      */
     void removeComment(Long blogid,Long commentId);
+
+    /**
+     * 根据分类进行查询
+     * @param catalog
+     * @param pageable
+     * @return
+     */
+    Page<Blog>listBlogByCatalog(Catalog catalog,Pageable pageable);
 }

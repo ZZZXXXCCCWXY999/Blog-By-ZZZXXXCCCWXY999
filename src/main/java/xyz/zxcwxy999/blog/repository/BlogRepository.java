@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import xyz.zxcwxy999.blog.domain.Blog;
+import xyz.zxcwxy999.blog.domain.Catalog;
 import xyz.zxcwxy999.blog.domain.User;
 
 public interface BlogRepository extends JpaRepository<Blog,Long> {
@@ -27,4 +28,12 @@ public interface BlogRepository extends JpaRepository<Blog,Long> {
      * @return
      */
     Page<Blog> findByTitleLikeAndUserOrTagsLikeAndUserOrderByCreateTimeDesc(String title,User user,String tags,User user2,Pageable pageable);
+
+    /**
+     * 根据分类查询博客列表
+     * @param catalog
+     * @param pageable
+     * @return
+     */
+    Page<Blog> findByCatalog(Catalog catalog,Pageable pageable);
 }

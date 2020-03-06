@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import xyz.zxcwxy999.blog.domain.Blog;
+import xyz.zxcwxy999.blog.domain.Catalog;
 import xyz.zxcwxy999.blog.domain.Comment;
 import xyz.zxcwxy999.blog.domain.User;
 import xyz.zxcwxy999.blog.repository.BlogRepository;
@@ -90,5 +91,11 @@ public class BlogServiceImpl implements BlogService{
             originalBlog.removeComment(blogid);
             this.saveBlog(originalBlog);
         }
+    }
+
+    @Override
+    public Page<Blog> listBlogByCatalog(Catalog catalog, Pageable pageable) {
+        Page<Blog>blogs=blogRepository.findByCatalog(catalog,pageable);
+        return blogs;
     }
 }

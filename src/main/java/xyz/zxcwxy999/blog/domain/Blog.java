@@ -66,6 +66,9 @@ public class Blog implements Serializable {
     @Column(name = "tags", length = 100)
     private String tags;//标签
 
+    @OneToOne(cascade = CascadeType.DETACH, fetch = FetchType.LAZY)
+    @JoinColumn(name = "catalog_id")
+    private Catalog catalog;
 
     //constructors
 
@@ -173,26 +176,36 @@ public class Blog implements Serializable {
         this.htmlContent = Processor.process(content);//将Markdown内容转为HTML模式
     }
 
+    public Catalog getCatalog() {
+        return catalog;
+    }
+
+    public void setCatalog(Catalog catalog) {
+        this.catalog = catalog;
+    }
+
     /**
      * 添加评论
+     *
      * @param comment
      */
-    public void addComment(Comment comment){
+    public void addComment(Comment comment) {
         this.comments.add(comment);
-        this.commentSize=this.comments.size();
+        this.commentSize = this.comments.size();
     }
 
     /**
      * 删除评论
+     *
      * @param commentId
      */
-    public void removeComment(Long commentId){
-        for (int index = 0; index <this.comments.size() ; index++) {
-            if(comments.get(index).getId()==commentId){
+    public void removeComment(Long commentId) {
+        for (int index = 0; index < this.comments.size(); index++) {
+            if (comments.get(index).getId() == commentId) {
                 this.comments.remove(index);
                 break;
             }
         }
-        this.commentSize=this.comments.size();
+        this.commentSize = this.comments.size();
     }
 }
