@@ -18,22 +18,32 @@
                 <div class="card-block">
                     <h2 class="card-title">
 							<span>
-			                  <a href="/u/waylau" title="waylau" th:href="'/u/' + ${blogModel.user.username}"  th:title="${blogModel.user.username}" >
-			                    <img src="/static/images/avatar-default.jpg" th:src="${blogModel.user.avatar} == null ? '/images/avatar-default.jpg' : ${blogModel.user.avatar}" class="blog-avatar-50">
+			                  <a href="/u/waylau" title="waylau" th:href="'/u/' + ${blogModel.user.username}"
+                                 th:title="${blogModel.user.username}">
+			                    <img src="/static/images/avatar-default.jpg"
+                                     th:src="${blogModel.user.avatar} == null ? '/images/avatar-default.jpg' : ${blogModel.user.avatar}"
+                                     class="blog-avatar-50">
 			                  </a>
 					        </span>
                         <a href="/u/waylau/blogs/1" class="card-link" title="waylau"
-                           th:href="'/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"  th:title="${blogModel.user.username}" th:text="${blogModel.title}">
+                           th:href="'/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"
+                           th:title="${blogModel.user.username}" th:text="${blogModel.title}">
                             OAuth 2.0 认证的原理与实践
                         </a>
                     </h2>
                     <div class="card-text">
-                        <a href="/u/waylau" th:href="'/u/' + ${blogModel.user.username}" class="card-link" th:text="${blogModel.user.username}" >waylau</a> 发表于 [[${#dates.format(blogModel.createTime, 'yyyy-MM-dd HH:mm')}]]
+                        <a href="/u/waylau" th:href="'/u/' + ${blogModel.user.username}" class="card-link"
+                           th:text="${blogModel.user.username}">waylau</a> 发表于 [[${#dates.format(blogModel.createTime,
+                        'yyyy-MM-dd HH:mm')}]]
                         <i class="fa fa-eye" aria-hidden="true">[[${blogModel.readSize}]]</i>
                         <i class="fa fa-heart-o" aria-hidden="true">[[${blogModel.voteSize}]]</i>
                         <i class="fa fa-comment-o" aria-hidden="true">[[${blogModel.commentSize}]]</i>
-                        <a href="/u/waylau" th:if="${isBlogOwner}" th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}" class="btn btn-primary float-right">编辑</a>
-                        <a href="javascript:void(0)" th:if="${isBlogOwner}" th:attr="blogUrl='/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"class="btn btn-primary float-right blog-delete-blog">删除</a>
+                        <a href="/u/waylau" th:if="${isBlogOwner}"
+                           th:href="'/u/' + ${blogModel.user.username}+ '/blogs/edit/'+ ${blogModel.id}"
+                           class="btn btn-primary float-right">编辑</a>
+                        <a href="javascript:void(0)" th:if="${isBlogOwner}"
+                           th:attr="blogUrl='/u/' + ${blogModel.user.username} + '/blogs/'+ ${blogModel.id}"
+                           class="btn btn-primary float-right blog-delete-blog">删除</a>
                     </div>
                     <hr>
                     <article class="post-content" th:utext="${blogModel.htmlContent}">
@@ -61,7 +71,10 @@
 
                 <div class="card-block">
 
-
+                    <h5>分类：<a th:href="'/u/'+${blogModel.user.username} + '/blogs?catalog='+${blogModel.catalog.id} "
+                              th:text="${blogModel.catalog.name}">
+                        Spring Data
+                    </a></h5>
                     <h5>评论：</h5>
                     <div class="row">
                         <div class="col-lg-12">
@@ -147,8 +160,8 @@
 
 <!--JavaScript-->
 <script th:inline="javascript">
-    var blogId=[[${blogModel.id}]];
-    var blogUrl='/u/'+[[${blogModel.user.username}]]+'/blogs/'+[[${blogModel.id}]];
+    var blogId = [[${blogModel.id}]];
+    var blogUrl = '/u/' + [[${blogModel.user.username}]] + '/blogs/' + [[${blogModel.id}]];
 </script>
 <script src="../../js/userspace/blog.js" th:src="@{/static/js/userspace/blog.js}"></script>
 </body>
