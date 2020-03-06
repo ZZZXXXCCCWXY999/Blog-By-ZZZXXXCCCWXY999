@@ -180,17 +180,16 @@ public class UserspaceController {
         try{
             //判断是修改还是新增
             if(blog.getId()!=null){
-                System.out.println("修改修改修改修改修改修改");
                 Optional<Blog>optionalBlog=blogService.getBlogById(blog.getId());
                 if (optionalBlog.isPresent()){
                     Blog orignalBlog=optionalBlog.get();
                     orignalBlog.setTitle(blog.getTitle());
                     orignalBlog.setContent(blog.getContent());
                     orignalBlog.setSummary(blog.getSummary());
+                    orignalBlog.setTags(blog.getTags());
                     blogService.saveBlog(orignalBlog);
                 }
             }else{
-                System.out.println("新增新增新增新增新增新增");
                 User user=(User)userDetailsService.loadUserByUsername(username);
                 blog.setUser(user);
                 blogService.saveBlog(blog);
