@@ -36,7 +36,7 @@ public class EsBlog implements Serializable {
     private Integer commentSize = 0;
     @Field(type = FieldType.Integer, index = false)
     private Integer voteSize = 0;
-    @Field(type = FieldType.Text, index = false)
+    @Field(type = FieldType.Text, fielddata = true,searchAnalyzer = "ik_smart",analyzer = "ik_smart")
     private String tags;
 
     protected EsBlog() {
