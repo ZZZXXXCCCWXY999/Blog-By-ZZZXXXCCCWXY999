@@ -1,15 +1,14 @@
 package xyz.zxcwxy999.blog.domain.es;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
 import xyz.zxcwxy999.blog.domain.Blog;
-
-import javax.persistence.Id;
 import java.io.Serializable;
-import java.lang.annotation.Documented;
 import java.sql.Timestamp;
 
-@Documented(indexName = "blog", type = "blog")
+@Document(indexName = "blog", type = "blog")
 public class EsBlog implements Serializable {
 
     private static final long serialVersionUID = 1L;
@@ -57,6 +56,20 @@ public class EsBlog implements Serializable {
     }
 
     public EsBlog(Blog blog) {
+        this.blogId = blog.getId();
+        this.title = blog.getTitle();
+        this.summary = blog.getSummary();
+        this.content = blog.getContent();
+        this.username = blog.getUser().getUsername();
+        this.avatar = blog.getUser().getAvatar();
+        this.createTime = blog.getCreateTime();
+        this.readSize = blog.getReadSize();
+        this.commentSize = blog.getCommentSize();
+        this.voteSize = blog.getVoteSize();
+        this.tags = blog.getTags();
+    }
+
+    public void update(Blog blog){
         this.blogId = blog.getId();
         this.title = blog.getTitle();
         this.summary = blog.getSummary();
@@ -165,5 +178,4 @@ public class EsBlog implements Serializable {
     public void setTags(String tags) {
         this.tags = tags;
     }
-
 }

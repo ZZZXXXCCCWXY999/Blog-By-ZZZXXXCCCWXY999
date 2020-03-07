@@ -1,12 +1,15 @@
 package xyz.zxcwxy999.blog.Service;
 
+import static org.elasticsearch.index.query.QueryBuilders.matchAllQuery;
+import static org.elasticsearch.search.aggregations.AggregationBuilders.terms;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
-import org.elasticsearch.client.ml.job.results.Bucket;
 import org.elasticsearch.search.SearchParseException;
 import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.*;
 import org.elasticsearch.search.aggregations.bucket.terms.StringTerms;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms.Bucket;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -114,7 +117,7 @@ public class EsBlogServiceImpl implements EsBlogService {
             }
         });
         StringTerms modelTerms=(StringTerms)aggregations.asMap().get("tags");
-        Iterator<StringTerms.Bucket> modelBucketIt=modelTerms.getBuckets().iterator();
+        Iterator<Bucket> modelBucketIt=modelTerms.getBuckets().iterator();
         while (modelBucketIt.hasNext()){
             Bucket actiontypeBucket=modelBucketIt.next();
             list.add(new TagVO(actiontypeBucket.getKey().toString(),actiontypeBucket.getDocCount()));
@@ -142,7 +145,7 @@ public class EsBlogServiceImpl implements EsBlogService {
             }
         });
         StringTerms modelTerms=(StringTerms)aggregations.asMap().get("users");
-        Iterator<StringTerms.Bucket> modelBucketIt=modelTerms.getBuckets().iterator();
+        Iterator<Bucket> modelBucketIt=modelTerms.getBuckets().iterator();
         while (modelBucketIt.hasNext()){
             Bucket actiontypeBucket=modelBucketIt.next();
             String username=actiontypeBucket.getKey().toString();

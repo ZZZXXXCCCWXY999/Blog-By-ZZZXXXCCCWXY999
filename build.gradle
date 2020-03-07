@@ -93,9 +93,13 @@ dependencies {
 	// https://mvnrepository.com/artifact/es.nitaur.markdown/txtmark
 	compile group: 'es.nitaur.markdown', name: 'txtmark', version: '0.16'
 
-	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch
-	compile group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '3.2.5.RELEASE'
+	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-elasticsearch
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-elasticsearch', version: '2.1.1.RELEASE'
 
+	// https://mvnrepository.com/artifact/org.elasticsearch/elasticsearch
+	compile group: 'org.elasticsearch', name: 'elasticsearch', version: '2.4.4'
 
+	// 添加  JNA 的依赖
+	compile('net.java.dev.jna:jna:4.3.0')
 
 }
