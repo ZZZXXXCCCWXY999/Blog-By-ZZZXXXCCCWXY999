@@ -166,12 +166,4 @@ public class EsBlog implements Serializable {
         this.tags = tags;
     }
 
-    @Override
-    public String toString() {
-        return "EsBlog{" +
-                "blogId=" + blogId +
-                ", title='" + title + '\'' +
-                ", summary='" + summary + '\'' +
-                '}';
-    }
 }
