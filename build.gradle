@@ -93,5 +93,9 @@ dependencies {
 	// https://mvnrepository.com/artifact/es.nitaur.markdown/txtmark
 	compile group: 'es.nitaur.markdown', name: 'txtmark', version: '0.16'
 
+	// https://mvnrepository.com/artifact/org.springframework.data/spring-data-elasticsearch
+	compile group: 'org.springframework.data', name: 'spring-data-elasticsearch', version: '3.2.5.RELEASE'
+
+
 
 }
