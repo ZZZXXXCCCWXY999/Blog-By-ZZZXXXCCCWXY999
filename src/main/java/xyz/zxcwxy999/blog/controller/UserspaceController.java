@@ -176,11 +176,9 @@ public class UserspaceController {
     @PostMapping("/{username}/blogs/edit")
     @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> saveBlog(@PathVariable("username")String username,@RequestBody Blog blog){
-        System.out.println("POSTMAPPING");
         try{
             //判断是修改还是新增
             if(blog.getId()!=null){
-                System.out.println("修改修改修改修改修改修改");
                 Optional<Blog>optionalBlog=blogService.getBlogById(blog.getId());
                 if (optionalBlog.isPresent()){
                     Blog orignalBlog=optionalBlog.get();
@@ -190,7 +188,6 @@ public class UserspaceController {
                     blogService.saveBlog(orignalBlog);
                 }
             }else{
-                System.out.println("新增新增新增新增新增新增");
                 User user=(User)userDetailsService.loadUserByUsername(username);
                 blog.setUser(user);
                 blogService.saveBlog(blog);
