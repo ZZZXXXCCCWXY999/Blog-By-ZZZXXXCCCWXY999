@@ -54,33 +54,33 @@ $(function () {
     }
 
     // 提交评论
-    $(".blog-content-container").on("click","#submitComment", function () {
+    $(".blog-content-container").on("click", "#submitComment", function () {
         //获取CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
         $.ajax({
             url: '/comments',
             type: 'POST',
-            data:{"blogId":blogId, "commentContent":$('#commentContent').val()},
+            data: {"blogId": blogId, "commentContent": $('#commentContent').val()},
             beforeSend: function (request) {
                 request.setRequestHeader(csrfHeader, csrfToken);//添加CSRF Token
             },
-            success: function(data){
+            success: function (data) {
                 if (data.success) {
                     // 清空评论框
                     $('#commentContent').val('');
                     // 获取评论列表
                     getCommnet(blogId);
                 } else {
-                    if($("#username").val()==null){
+                    if ($("#username").val() == null) {
                         toastr.error("请先登录再评论!")
                     }
-                    if($("#username").val()!=null && $("commentContent").val()==null){
+                    if ($("#username").val() != null && $("commentContent").val() == null) {
                         toastr.error("评论内容不能为空!")
                     }
                 }
             },
-            error : function() {
+            error: function () {
                 toastr.error("error!");
             }
         });
@@ -117,6 +117,7 @@ $(function () {
         //获取CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
         if ($("#username").val() == null) {
             toastr.error("请先登录再点赞!");
         } else {
@@ -125,12 +126,14 @@ $(function () {
                 type: 'POST',
                 data: {"blogId": blogId},
                 beforeSend: function (request) {
-                    request.setRequestHeader(csrfHeader, csrfToken);//添加CSRF Token
+                    request.setRequestHeader(csrfHeader, csrfHeader);//添加CSRF Token
                 },
                 success: function (data) {
                     if (data.success) {
                         toastr.info(data.message);
                         window.location = blogUrl;
+                    } else {
+                        toastr.error(data.message);
                     }
                 },
                 error: function () {
@@ -145,11 +148,12 @@ $(function () {
         //获取CSRF Token
         var csrfToken = $("meta[name='_csrf']").attr("content");
         var csrfHeader = $("meta[name='_csrf_header']").attr("content");
+
         $.ajax({
             url: '/votes/' + $(this).attr('voteId') + '?blogId=' + blogId,
             type: 'DELETE',
             beforeSend: function (request) {
-                request.setRequestHeader(csrfHeader, csrfToken);//添加CSRF Token
+                request.setRequestHeader(csrfHeader, csrfHeader);//添加CSRF Token
             },
             success: function (data) {
                 if (data.success) {
