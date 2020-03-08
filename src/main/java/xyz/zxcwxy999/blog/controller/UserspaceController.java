@@ -19,8 +19,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import xyz.zxcwxy999.blog.Service.BlogService;
+import xyz.zxcwxy999.blog.Service.CatalogService;
 import xyz.zxcwxy999.blog.Service.UserService;
 import xyz.zxcwxy999.blog.domain.Blog;
+import xyz.zxcwxy999.blog.domain.Catalog;
 import xyz.zxcwxy999.blog.domain.User;
 import xyz.zxcwxy999.blog.domain.Vote;
 import xyz.zxcwxy999.blog.util.ConstraintViolationExceptionHandler;
@@ -44,6 +46,9 @@ public class UserspaceController {
 
     @Autowired
     private BlogService blogService;
+
+    @Autowired
+    private CatalogService catalogService;
 
     @Qualifier("UserService")
     @Autowired
@@ -101,12 +106,19 @@ public class UserspaceController {
             page = blogService.listBlogByTitleVote(user, keyword, pageable);
         }
         List<Blog> list = page.getContent();//当前所在页面数据列表
+        if (catalogId != null && catalogId > 0) {//分类查询
+            Optional<Catalog> catalog = catalogService.getCatalogById(catalogId);
+            Pageable pageable = PageRequest.of(pageIndex, pageSize);
+            page = blogService.listBlogByCatalog(catalog.get(), pageable);
+            order = "";
+        }
         model.addAttribute("user", user);
         model.addAttribute("order", order);
         model.addAttribute("catalogId", catalogId);
         model.addAttribute("keyword", keyword);
         model.addAttribute("page", page);
         model.addAttribute("blogList", list);
+        model.addAttribute("catalogId", catalogId);
         return (async == true ? "/userspace/u :: #mainContainerRepleace" : "/userspace/u");
     }
 
@@ -161,7 +173,11 @@ public class UserspaceController {
      * @return
      */
     @GetMapping("/{username}/blogs/edit")
+
     public ModelAndView createBlog(@PathVariable("username") String username, Model model) {
+        User user = (User) userDetailsService.loadUserByUsername(username);
+        List<Catalog> catalogs = catalogService.listCatalogs(user);
+        model.addAttribute("catalogs", catalogs);
         model.addAttribute("blog", new Blog(null, null, null));
         model.addAttribute("fileServerUrl", fileServerUrl);
         //文件服务器的地址传给客户端
@@ -178,7 +194,9 @@ public class UserspaceController {
      */
     @GetMapping("/{username}/blogs/edit/{id}")
     public ModelAndView editBlog(@PathVariable("username") String username, @PathVariable("id") Long id, Model model) {
-        System.out.println("GETMAPPING");
+        User user = (User) userDetailsService.loadUserByUsername(username);
+        List<Catalog> catalogs = catalogService.listCatalogs(user);
+        model.addAttribute("catalogs", catalogs);
         model.addAttribute("blog", blogService.getBlogById(id).get());
         model.addAttribute("fileServerUrl", fileServerUrl);
         //文件服务器的地址返回给客户端
@@ -195,6 +213,11 @@ public class UserspaceController {
     @PostMapping("/{username}/blogs/edit")
     @PreAuthorize("authentication.name.equals(#username)")
     public ResponseEntity<Response> saveBlog(@PathVariable("username") String username, @RequestBody Blog blog) {
+        //对Catalog进行处理
+        if (blog.getCatalog().getId() == null) {
+            return ResponseEntity.ok().body(new Response(false, "未选择分类"));
+        }
+
         try {
             //判断是修改还是新增
             if (blog.getId() != null) {
@@ -204,6 +227,7 @@ public class UserspaceController {
                     orignalBlog.setTitle(blog.getTitle());
                     orignalBlog.setContent(blog.getContent());
                     orignalBlog.setSummary(blog.getSummary());
+                    orignalBlog.setCatalog(blog.getCatalog());
                     blogService.saveBlog(orignalBlog);
                 }
             } else {

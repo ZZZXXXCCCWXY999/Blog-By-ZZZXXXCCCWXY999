@@ -3,6 +3,7 @@ package xyz.zxcwxy999.blog.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import xyz.zxcwxy999.blog.domain.Blog;
+import xyz.zxcwxy999.blog.domain.Catalog;
 import xyz.zxcwxy999.blog.domain.User;
 
 import java.util.Optional;
@@ -11,6 +12,7 @@ public interface BlogService {
 
     /**
      * 保存Blog
+     *
      * @param blog
      * @return
      */
@@ -18,12 +20,14 @@ public interface BlogService {
 
     /**
      * 删除Blog
+     *
      * @param id
      */
     void removeBlog(Long id);
 
     /**
      * 根据id过去Blog
+     *
      * @param id
      * @return
      */
@@ -31,6 +35,7 @@ public interface BlogService {
 
     /**
      * 根据用户进行博客名称分页模糊查询（最新）
+     *
      * @param user
      * @param title
      * @param pageable
@@ -40,6 +45,7 @@ public interface BlogService {
 
     /**
      * 根据用户进行博客名称分页模糊查询（最热）
+     *
      * @param user
      * @param title
      * @param pageable
@@ -49,27 +55,31 @@ public interface BlogService {
 
     /**
      * 阅读量递增
+     *
      * @param id
      */
     void readingIncrease(Long id);
 
     /**
      * 发表评论
+     *
      * @param blogId
      * @param commentContent
      * @return
      */
-    Blog createComment(Long blogId,String commentContent);
+    Blog createComment(Long blogId, String commentContent);
 
     /**
      * 删除评论
+     *
      * @param blogid
      * @param commentId
      */
-    void removeComment(Long blogid,Long commentId);
+    void removeComment(Long blogid, Long commentId);
 
     /**
      * 点赞
+     *
      * @param blogId
      * @return
      */
@@ -77,8 +87,17 @@ public interface BlogService {
 
     /**
      * 取消点赞
+     *
      * @param blogId
      * @param voteId
      */
-    void removeVote(Long blogId,Long voteId);
+    void removeVote(Long blogId, Long voteId);
+
+    /* 根据分类进行查询
+     * @param catalog
+     * @param pageable
+     * @return
+     */
+    Page<Blog> listBlogByCatalog(Catalog catalog, Pageable pageable);
+
 }

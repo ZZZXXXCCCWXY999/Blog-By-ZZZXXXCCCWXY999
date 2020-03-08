@@ -72,7 +72,7 @@ $(function() {
 		 // 清空搜索框内容
 		 $("#keyword").val('');
 	});
-	
+	var catalogId;
 	// 获取分类列表
 	function getCatalogs(username) {
 		// 获取 CSRF Token 
