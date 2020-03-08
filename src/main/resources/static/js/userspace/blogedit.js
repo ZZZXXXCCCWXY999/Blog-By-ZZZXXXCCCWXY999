@@ -31,9 +31,9 @@ $(function() {
 	});
 
 	//初始化标签
-	// $('.form-control-tag').tagsInput({
-	// 	'defaultText' : '输入标签'
-	// });
+	$('.form-control-tag').tagsInput({
+		'defaultText' : '输入标签'
+	});
 
 	// 发布博客
 	$("#submitBlog").click(function() {
