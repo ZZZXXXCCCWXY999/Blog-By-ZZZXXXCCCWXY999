@@ -10,6 +10,7 @@ import xyz.zxcwxy999.blog.domain.Catalog;
 import xyz.zxcwxy999.blog.domain.Comment;
 import xyz.zxcwxy999.blog.domain.User;
 import xyz.zxcwxy999.blog.domain.Vote;
+import xyz.zxcwxy999.blog.domain.es.EsBlog;
 import xyz.zxcwxy999.blog.repository.BlogRepository;
 
 import javax.transaction.Transactional;
@@ -21,19 +22,31 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogRepository blogRepository;
 
+    @Autowired
+    private EsBlogService esBlogService;
+
     @Transactional
     @Override
     public Blog saveBlog(Blog blog) {
+        boolean isNew = (blog.getId() == null);
+        EsBlog esBlog = null;
         Blog returnBlog = blogRepository.save(blog);
+        if (isNew) {
+            esBlog = new EsBlog(returnBlog);
+        } else {
+            esBlog = esBlogService.getEsBlogByBlogId(blog.getId());
+            esBlog.update(returnBlog);
+        }
+        esBlogService.updateEsBlog(esBlog);
         return returnBlog;
     }
 
     @Transactional
-
-
     @Override
     public void removeBlog(Long id) {
         blogRepository.deleteById(id);
+        EsBlog esBlog = esBlogService.getEsBlogByBlogId(id);
+        esBlogService.removeEsBlog(esBlog.getId());
     }
 
     @Transactional
@@ -124,4 +137,5 @@ public class BlogServiceImpl implements BlogService {
         Page<Blog> blogs = blogRepository.findByCatalog(catalog, pageable);
         return blogs;
     }
+}
 
